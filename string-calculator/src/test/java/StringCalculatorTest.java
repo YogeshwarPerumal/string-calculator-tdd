@@ -61,4 +61,9 @@ public class StringCalculatorTest {
         assertEquals("Negative numbers are not allowed -3, -4, -5", exception.getMessage());
     }
 
+    @Test
+    public void testIgnoreLargeNumbers() throws Exception {
+        assertEquals(stringCalculator.add("//.\n1.1002.4.5.\n\n1594"), 10);
+    }
+
 }
