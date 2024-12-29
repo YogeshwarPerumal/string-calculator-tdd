@@ -24,33 +24,41 @@ public class StringCalculator {
         if (expression.startsWith("//")) {
             String[] tokenAndString = expression.split("\n",2);
             String token = tokenAndString[0].replace("//","");
-            expression = tokenAndString[1];
+            expression = tokenAndString[1].replaceAll("\n","");
             if (token.startsWith("[") && token.endsWith("]")) {
                 for (String ele: extractDelimitersFromBrackets(token)) {
-                    expression = processSpecialCharactersInDelimiter(ele, expression);
+                    expression = processDelimiter(ele, expression);
                 }
             }
             else {
-                expression = processSpecialCharactersInDelimiter(token, expression);
+                expression = processDelimiter(token, expression);
             }
+        }
+        else {
+            expression = expression.replaceAll("\n","");
         }
 
         return expression;
     }
 
-    private String processSpecialCharactersInDelimiter(String delimiter, String expression) {
-        switch (delimiter) {
-            case "$", "+", ".", "^", "*", "?", "|", "(", ")", "[", "]", "{", "}", "\\": {
-                String builder = "\\" +
-                        delimiter;
-                expression = expression.replaceAll(builder, ",");
-                break;
+    // Format the delimiter
+    private String processDelimiter(String delimiter, String expression) {
+        StringBuilder builder = new StringBuilder();
+        for (char c: delimiter.toCharArray()) {
+            builder.append(processSpecialCharacters(c));
+        }
+        return expression.replaceAll(builder.toString(),",");
+    }
+
+    // Handle special characters for regex
+    private String processSpecialCharacters(char element) {
+        switch (element) {
+            case '$', '+', '.', '^', '*', '?', '|', '(', ')', '[', ']', '{', '}', '\\': {
+                return "\\" + element;
             }
-            default:
-                expression = expression.replaceAll(delimiter, ",");
         }
 
-        return expression;
+        return String.valueOf(element);
     }
 
     private List<String> extractDelimitersFromBrackets(String delimiter) {
@@ -69,6 +77,7 @@ public class StringCalculator {
         return values;
     }
 
+    // Evaluate the expression
     private int calculateExpression(String[] numbers) throws Exception {
         int sum = 0;
         boolean isNegative = false;
@@ -77,7 +86,6 @@ public class StringCalculator {
         builder.append("Negative numbers are not allowed ");
 
         for (String number: numbers) {
-            number = number.replaceAll("\n", "");
             int val = Integer.parseInt(number);
             if (val < 0) {
                 isNegative = true;
@@ -85,7 +93,7 @@ public class StringCalculator {
             }
 
             if (val <= 1000) {
-                sum += Integer.parseInt(number.replaceAll("\n", ""));
+                sum += Integer.parseInt(number);
             }
         }
 

@@ -81,4 +81,10 @@ public class StringCalculatorTest {
     public void testMultipleDelimiter() throws Exception {
         assertEquals(stringCalculator.add("//[*][%]\n1*2%3"),6);
     }
+
+    @Test
+    public void testMultiCharMultipleDelimiter() throws Exception {
+        assertEquals(stringCalculator.add("//[***][,,]\n1***2,,3,,4***5"), 15);
+        assertEquals(stringCalculator.add("//[*^&]\n1*^&5"),6);
+    }
 }
