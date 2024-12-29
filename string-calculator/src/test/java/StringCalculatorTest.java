@@ -40,5 +40,6 @@ public class StringCalculatorTest {
     @Test
     public void testDynamicDelimiter() {
         assertEquals(stringCalculator.add("//;\n1;2"),3);
+        assertEquals(stringCalculator.add("//;\n1;2\n\n;3;4\n\n\n\n"), 10);
     }
 }
