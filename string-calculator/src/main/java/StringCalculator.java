@@ -17,6 +17,11 @@ public class StringCalculator {
             str = strs[1];
         }
 
+        delimiter = switch (delimiter) {
+            case "$", "+", ".", "^", "*", "?", "|", "(", ")", "[", "]", "{", "}", "\\" -> "\\" + delimiter;
+            default -> delimiter;
+        };
+
         String[] numbers = str.split(delimiter);
         int sum = 0;
 
