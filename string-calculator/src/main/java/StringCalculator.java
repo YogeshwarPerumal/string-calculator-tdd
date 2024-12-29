@@ -5,6 +5,17 @@ public class StringCalculator {
             return 0;
         }
 
-        return Integer.parseInt(str);
+        String[] numbers = str.split(",");
+        int sum = 0;
+
+        try {
+            for (String number: numbers) {
+                sum += Integer.parseInt(number);
+            }
+            return sum;
+        } catch (Exception e) {
+            System.out.println("Error - " + e.toString());
+            return 0;
+        }
     }
 }
