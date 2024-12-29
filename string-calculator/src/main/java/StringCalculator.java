@@ -1,6 +1,9 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class StringCalculator {
 
-    public int add(String str) {
+    public int add(String str) throws Exception {
         if (str.isEmpty()) {
             return 0;
         }
@@ -24,15 +27,25 @@ public class StringCalculator {
 
         String[] numbers = str.split(delimiter);
         int sum = 0;
+        boolean isNegative = false;
+        List<String> negativeNumbers = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+        builder.append("Negative numbers are not allowed ");
 
-        try {
-            for (String number: numbers) {
-                sum += Integer.parseInt(number.replaceAll("\n", ""));
+        for (String number: numbers) {
+            number = number.replaceAll("\n", "");
+            int val = Integer.parseInt(number);
+            if (val < 0) {
+                isNegative = true;
+                negativeNumbers.add(number);
             }
-            return sum;
-        } catch (Exception e) {
-            System.out.println("Error - " + e.toString());
-            return 0;
+            sum += Integer.parseInt(number.replaceAll("\n", ""));
         }
+
+        if (isNegative) {
+            builder.append(String.join(", ", negativeNumbers));
+            throw new Exception(builder.toString());
+        }
+        return sum;
     }
 }
