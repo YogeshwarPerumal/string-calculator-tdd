@@ -64,6 +64,7 @@ public class StringCalculatorTest {
     @Test
     public void testIgnoreLargeNumbers() throws Exception {
         assertEquals(stringCalculator.add("//.\n1.1002.4.5.\n\n1594"), 10);
+        assertEquals(stringCalculator.add("//,\n10001,10002,1003"),0);
     }
 
 }
