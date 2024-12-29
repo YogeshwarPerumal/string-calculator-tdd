@@ -42,4 +42,9 @@ public class StringCalculatorTest {
         assertEquals(stringCalculator.add("//;\n1;2"),3);
         assertEquals(stringCalculator.add("//;\n1;2\n\n;3;4\n\n\n\n"), 10);
     }
+
+    @Test
+    public void testSpecialCharacterDelimiter() {
+        assertEquals(stringCalculator.add("//$\n1$2\n\n$3$4\n\n\n\n"), 10);
+    }
 }
