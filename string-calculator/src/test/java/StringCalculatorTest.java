@@ -31,4 +31,9 @@ public class StringCalculatorTest {
     public void testAdditionOfMultipleNumbers() {
         assertEquals(stringCalculator.add("1,9,10,12,14"), 46);
     }
+
+    @Test
+    public void testAdditionWithNewLineDelimiter() {
+        assertEquals(stringCalculator.add("1\n4\n5"), 10);
+    }
 }
