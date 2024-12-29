@@ -34,6 +34,6 @@ public class StringCalculatorTest {
 
     @Test
     public void testAdditionWithNewLineDelimiter() {
-        assertEquals(stringCalculator.add("1\n4\n5"), 10);
+        assertEquals(stringCalculator.add("1\n,4,\n5"), 10);
     }
 }
