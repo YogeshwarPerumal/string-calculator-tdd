@@ -3,21 +3,35 @@ import java.util.List;
 
 public class StringCalculator {
 
-    public int add(String str) throws Exception {
-        if (str.isEmpty()) {
+    public int add(String input) throws Exception {
+        if (input.isEmpty()) {
             return 0;
         }
 
-        if (str.length() == 1) {
-            return Integer.parseInt(str);
+        if (input.length() == 1) {
+            return Integer.parseInt(input);
         }
 
+        String[] delimiterAndString = processString(input);
+        String processedString = delimiterAndString[1];
+        String[] numbers = processedString.split(delimiterAndString[0]);
+
+        return calculateExpression(numbers);
+    }
+
+    private String[] processString(String str) {
         String delimiter = ",";
 
         if (str.startsWith("//")) {
-            String[] strs = str.split("\n",2);
-            delimiter = strs[0].replace("//","");
-            str = strs[1];
+            String[] tokenAndString = str.split("\n",2);
+            String token = tokenAndString[0].replace("//","");
+            if (token.startsWith("[") && token.endsWith("]")) {
+                delimiter = token.substring(1,token.length()-1);
+            }
+            else {
+                delimiter = token;
+            }
+            str = tokenAndString[1];
         }
 
         delimiter = switch (delimiter) {
@@ -25,7 +39,10 @@ public class StringCalculator {
             default -> delimiter;
         };
 
-        String[] numbers = str.split(delimiter);
+        return new String[]{delimiter,str};
+    }
+
+    private int calculateExpression(String[] numbers) throws Exception {
         int sum = 0;
         boolean isNegative = false;
         List<String> negativeNumbers = new ArrayList<>();
