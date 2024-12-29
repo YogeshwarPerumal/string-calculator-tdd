@@ -67,4 +67,8 @@ public class StringCalculatorTest {
         assertEquals(stringCalculator.add("//,\n10001,10002,1003"),0);
     }
 
+    @Test
+    public void testMultiCharDelimiter() throws Exception {
+        assertEquals(stringCalculator.add("//[,,,]\n1,,,3,,,5,,,1"), 10);
+    }
 }
