@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringCalculator {
 
@@ -12,34 +14,59 @@ public class StringCalculator {
             return Integer.parseInt(input);
         }
 
-        String[] delimiterAndString = processString(input);
-        String processedString = delimiterAndString[1];
-        String[] numbers = processedString.split(delimiterAndString[0]);
+        String processedString = processString(input);
+        String[] numbers = processedString.split(",");
 
         return calculateExpression(numbers);
     }
 
-    private String[] processString(String str) {
-        String delimiter = ",";
-
-        if (str.startsWith("//")) {
-            String[] tokenAndString = str.split("\n",2);
+    private String processString(String expression) {
+        if (expression.startsWith("//")) {
+            String[] tokenAndString = expression.split("\n",2);
             String token = tokenAndString[0].replace("//","");
+            expression = tokenAndString[1];
             if (token.startsWith("[") && token.endsWith("]")) {
-                delimiter = token.substring(1,token.length()-1);
+                for (String ele: extractDelimitersFromBrackets(token)) {
+                    expression = processSpecialCharactersInDelimiter(ele, expression);
+                }
             }
             else {
-                delimiter = token;
+                expression = processSpecialCharactersInDelimiter(token, expression);
             }
-            str = tokenAndString[1];
         }
 
-        delimiter = switch (delimiter) {
-            case "$", "+", ".", "^", "*", "?", "|", "(", ")", "[", "]", "{", "}", "\\" -> "\\" + delimiter;
-            default -> delimiter;
-        };
+        return expression;
+    }
 
-        return new String[]{delimiter,str};
+    private String processSpecialCharactersInDelimiter(String delimiter, String expression) {
+        switch (delimiter) {
+            case "$", "+", ".", "^", "*", "?", "|", "(", ")", "[", "]", "{", "}", "\\": {
+                String builder = "\\" +
+                        delimiter;
+                expression = expression.replaceAll(builder, ",");
+                break;
+            }
+            default:
+                expression = expression.replaceAll(delimiter, ",");
+        }
+
+        return expression;
+    }
+
+    private List<String> extractDelimitersFromBrackets(String delimiter) {
+        List<String> values = new ArrayList<>();
+
+        // Regular expression to find content inside square brackets
+        String regex = "\\[([^\\]]*)\\]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(delimiter);
+
+        // Find all matches and add to the list
+        while (matcher.find()) {
+            values.add(matcher.group(1));
+        }
+
+        return values;
     }
 
     private int calculateExpression(String[] numbers) throws Exception {
